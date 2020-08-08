@@ -1,10 +1,9 @@
 import base64
-import hashlib
 from Cryptodome import Random
 from Cryptodome.Cipher import AES
 
 
-class AESCipher(object):
+class AESCipher:
 
     def __init__(self, key):
         self.key = key
