@@ -17,7 +17,6 @@ class Logr:
         self.public_key = public_key
         self.private_hash = hashlib.sha256(key_bytes).digest()
         self.cipher = aes.AESCipher(self.private_hash)
-        self.client = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
         self.hostname = hostname or socket.gethostname()
         self.version = version
         self.pid = pid
