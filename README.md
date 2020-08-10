@@ -6,9 +6,9 @@
 [Logr]: https://github.com/504dev/logr
 
 
-    pip install logr-node-client
+    pip install logr-python-client
 
-### Available `logger` functions
+### Available `logger` methods
 
 * `logger.emerg`
 * `logger.alert`
