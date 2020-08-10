@@ -21,13 +21,19 @@ class Logger:
         return res
 
     def getbody(self, *args):
-        msg = format(*args)
+        msg = self.fmt(*args)
         res = self.body
         res = res.replace('{version}', self.config.getversion())
         res = res.replace('{pid}', str(self.config.pid))
         # res = res.replace('{initiator}', '')
         res = res.replace('{message}', msg)
         return res
+
+    def fmt(self, *args):
+        template = ''
+        for _ in range(len(args)):
+            template += '{} '
+        return template.format(*args)
 
     def emerg(self, *args):
         self.log(LevelEmerg, *args)

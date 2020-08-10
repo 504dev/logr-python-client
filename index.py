@@ -8,4 +8,4 @@ conf = Logr(
 
 logger = conf.getlogger('hello.log')
 
-logger.info(conf)
+logger.info('hello {}', 'python!', 123, [1, 2, 3], conf)
