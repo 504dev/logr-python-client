@@ -2,6 +2,8 @@ import time
 import json
 import datetime
 import socket
+import traceback
+from colorama import Fore, Style
 from levels import LevelDebug, LevelInfo, LevelNotice, LevelWarn, LevelError, LevelCrit, LevelAlert, LevelEmerg
 
 
@@ -17,23 +19,17 @@ class Logger:
     def getprefix(self, level):
         res = self.prefix
         res = res.replace('{time}', datetime.datetime.utcnow().isoformat())
-        res = res.replace('{level}', level)
+        res = res.replace('{level}', Logger.colorlevel(level))
         return res
 
     def getbody(self, *args):
-        msg = self.fmt(*args)
+        msg = Logger.format(*args)
         res = self.body
         res = res.replace('{version}', self.config.getversion())
         res = res.replace('{pid}', str(self.config.pid))
-        # res = res.replace('{initiator}', '')
+        res = res.replace('{initiator}', Logger.initiator())
         res = res.replace('{message}', msg)
         return res
-
-    def fmt(self, *args):
-        template = ''
-        for _ in range(len(args)):
-            template += '{} '
-        return template.format(*args)
 
     def emerg(self, *args):
         self.log(LevelEmerg, *args)
@@ -60,16 +56,20 @@ class Logger:
         self.log(LevelDebug, *args)
 
     def log(self, level, *args):
-        msg = self.getbody(*args)
-        ts = str(time.time_ns())
+        prefix = self.getprefix(level)
+        body = self.getbody(*args)
+        print(prefix + body)
+        self.send(level, body)
+
+    def send(self, level, message):
         log_obj = {
-            'timestamp': ts,
+            'timestamp': str(time.time_ns()),
             'hostname': self.config.hostname,
             'logname': self.logname,
             'level': level,
             'pid': self.config.pid,
             'version': self.config.getversion(),
-            'message': msg
+            'message': message
         }
         msg_json = json.dumps(log_obj)
         cipher_log = self.config.cipher.encrypt(msg_json)
@@ -79,4 +79,39 @@ class Logger:
         }
         data_json = json.dumps(data)
         self.conn.sendto(data_json.encode(), self.config.udp)
-        print(data_json)
+
+    @staticmethod
+    def format(*args):
+        template = ''
+        for _ in range(len(args)):
+            template += '{} '
+        return template.format(*args)
+
+    @staticmethod
+    def initiator():
+        stack = traceback.format_stack()[-5]
+        splitted = stack.split('"')
+        name = splitted[1]
+        line = splitted[2].split(',')[1][6:]
+        return name + ':' + line
+
+    @staticmethod
+    def colorlevel(level):
+        style = Fore.WHITE
+        if level == LevelDebug:
+            style = Fore.BLUE
+        if level == LevelInfo:
+            style = Fore.GREEN
+        if level == LevelNotice:
+            style = Fore.GREEN + Style.BRIGHT
+        if level == LevelWarn:
+            style = Fore.YELLOW
+        if level == LevelError:
+            style = Fore.LIGHTRED_EX
+        if level == LevelCrit:
+            style = Fore.RED
+        if level == LevelAlert:
+            style = Fore.RED + Style.BRIGHT
+        if level == LevelEmerg:
+            style = Fore.RED + Style.BRIGHT
+        return style + level + Style.RESET_ALL
