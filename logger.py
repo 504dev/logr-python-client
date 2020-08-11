@@ -6,17 +6,18 @@ import datetime
 import traceback
 from logr import Logr
 from colorama import Fore, Style
-from levels import LevelDebug, LevelInfo, LevelNotice, LevelWarn, LevelError, LevelCrit, LevelAlert, LevelEmerg
+from levels import Weights, LevelDebug, LevelInfo, LevelNotice, LevelWarn, LevelError, LevelCrit, LevelAlert, LevelEmerg
 
 
 class Logger:
 
-    def __init__(self, config: Logr, logname):
+    def __init__(self, config: Logr, logname, level=''):
         self.config = config
         self.logname = logname
         self.conn = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
         self.prefix = '{time} {level} '
         self.body = '[{version}, pid={pid}, {initiator}] {message}'
+        self.level = level
 
     def getprefix(self, level):
         res = self.prefix
@@ -67,6 +68,8 @@ class Logger:
         self.send(level, body)
 
     def send(self, level, message):
+        if Weights.get(level, -1) < Weights.get(self.level, -1):
+            return
         payload = {
             'timestamp': str(time.time_ns()),
             'hostname': self.config.hostname,
