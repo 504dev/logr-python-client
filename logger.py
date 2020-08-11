@@ -1,7 +1,8 @@
+import sys
 import time
 import json
-import datetime
 import socket
+import datetime
 import traceback
 from colorama import Fore, Style
 from levels import LevelDebug, LevelInfo, LevelNotice, LevelWarn, LevelError, LevelCrit, LevelAlert, LevelEmerg
@@ -58,7 +59,10 @@ class Logger:
     def log(self, level, *args):
         prefix = self.getprefix(level)
         body = self.getbody(*args)
-        print(prefix + body)
+        files = {LevelEmerg: sys.stderr, LevelAlert: sys.stderr, LevelCrit: sys.stderr, LevelError: sys.stderr,
+                 LevelWarn: sys.stdout, LevelNotice: sys.stdout, LevelInfo: sys.stdout, LevelDebug: sys.stdout}
+        file = files.get(level, sys.stdout)
+        print(prefix + body, file=file)
         self.send(level, body)
 
     def send(self, level, message):
@@ -97,21 +101,10 @@ class Logger:
 
     @staticmethod
     def colorlevel(level):
-        style = Fore.WHITE
-        if level == LevelDebug:
-            style = Fore.BLUE
-        if level == LevelInfo:
-            style = Fore.GREEN
-        if level == LevelNotice:
-            style = Fore.GREEN + Style.BRIGHT
-        if level == LevelWarn:
-            style = Fore.YELLOW
-        if level == LevelError:
-            style = Fore.LIGHTRED_EX
-        if level == LevelCrit:
-            style = Fore.RED
-        if level == LevelAlert:
-            style = Fore.RED + Style.BRIGHT
-        if level == LevelEmerg:
-            style = Fore.RED + Style.BRIGHT
+        styles = {LevelDebug: Fore.BLUE, LevelInfo: Fore.GREEN, LevelNotice: Fore.GREEN + Style.BRIGHT,
+                  LevelWarn: Fore.YELLOW, LevelError: Fore.LIGHTRED_EX, LevelCrit: Fore.RED,
+                  LevelAlert: Fore.RED + Style.BRIGHT, LevelEmerg: Fore.RED + Style.BRIGHT}
+
+        style = styles.get(level, Style.BRIGHT)
+
         return style + level + Style.RESET_ALL
