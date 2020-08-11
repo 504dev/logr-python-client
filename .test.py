@@ -13,5 +13,7 @@ def test():
     for level in [LevelDebug, LevelInfo, LevelNotice, LevelWarn, LevelError, LevelCrit, LevelAlert, LevelEmerg, 'unknown']:
         logger.log(level, 'hello {}', 'python!', 123, [1, 2, 3], conf)
 
+    counter = conf.getcounter('hello.log')
+
 
 test()

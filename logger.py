@@ -4,13 +4,14 @@ import json
 import socket
 import datetime
 import traceback
+from logr import Logr
 from colorama import Fore, Style
 from levels import LevelDebug, LevelInfo, LevelNotice, LevelWarn, LevelError, LevelCrit, LevelAlert, LevelEmerg
 
 
 class Logger:
 
-    def __init__(self, config, logname):
+    def __init__(self, config: Logr, logname):
         self.config = config
         self.logname = logname
         self.conn = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
@@ -66,7 +67,7 @@ class Logger:
         self.send(level, body)
 
     def send(self, level, message):
-        log_obj = {
+        payload = {
             'timestamp': str(time.time_ns()),
             'hostname': self.config.hostname,
             'logname': self.logname,
@@ -75,14 +76,12 @@ class Logger:
             'version': self.config.getversion(),
             'message': message
         }
-        msg_json = json.dumps(log_obj)
-        cipher_log = self.config.cipher.encrypt(msg_json)
-        data = {
+        cipher_log = self.config.cipher.encrypt(json.dumps(payload))
+        pack = {
             'public_key': self.config.public_key,
             'cipher_log': cipher_log
         }
-        data_json = json.dumps(data)
-        self.conn.sendto(data_json.encode(), self.config.udp)
+        self.conn.sendto(json.dumps(pack).encode(), self.config.udp)
 
     @staticmethod
     def format(*args):

@@ -3,11 +3,11 @@ import socket
 import aes
 import hashlib
 import base64
-from logger import Logger
 
 commit = os.popen('git rev-parse HEAD').read().strip()
 tag = os.popen('git tag -l --points-at HEAD').read().strip()
 pid = os.getpid()
+
 
 class Logr:
 
@@ -32,4 +32,9 @@ class Logr:
             return ''
 
     def getlogger(self, logname):
+        from logger import Logger
         return Logger(self, logname)
+
+    def getcounter(self, logname):
+        from counter import Counter
+        return Counter(self, logname)
