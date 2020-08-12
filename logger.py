@@ -11,7 +11,7 @@ from levels import Weights, LevelDebug, LevelInfo, LevelNotice, LevelWarn, Level
 
 class Logger:
 
-    def __init__(self, config: Logr, logname, level=''):
+    def __init__(self, config: Logr, logname: str, level: str = ''):
         self.config = config
         self.logname = logname
         self.conn = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
@@ -19,13 +19,13 @@ class Logger:
         self.body = '[{version}, pid={pid}, {initiator}] {message}'
         self.level = level
 
-    def getprefix(self, level):
+    def getprefix(self, level: str) -> str:
         res = self.prefix
         res = res.replace('{time}', datetime.datetime.utcnow().isoformat())
         res = res.replace('{level}', Logger.colorlevel(level))
         return res
 
-    def getbody(self, *args):
+    def getbody(self, *args) -> str:
         msg = Logger.format(*args)
         res = self.body
         res = res.replace('{version}', self.config.getversion())
@@ -58,7 +58,7 @@ class Logger:
     def debug(self, *args):
         self.log(LevelDebug, *args)
 
-    def log(self, level, *args):
+    def log(self, level: str, *args):
         prefix = self.getprefix(level)
         body = self.getbody(*args)
         files = {LevelEmerg: sys.stderr, LevelAlert: sys.stderr, LevelCrit: sys.stderr, LevelError: sys.stderr,
@@ -67,7 +67,7 @@ class Logger:
         print(prefix + body, file=file)
         self.send(level, body)
 
-    def send(self, level, message):
+    def send(self, level: str, message: str):
         if Weights.get(level, -1) < Weights.get(self.level, -1):
             return
         payload = {
@@ -87,14 +87,14 @@ class Logger:
         self.conn.sendto(json.dumps(pack).encode(), self.config.udp)
 
     @staticmethod
-    def format(*args):
+    def format(*args) -> str:
         template = ''
         for _ in range(len(args)):
             template += '{} '
         return template.format(*args)
 
     @staticmethod
-    def initiator():
+    def initiator() -> str:
         stack = traceback.format_stack()[-5]
         splitted = stack.split('"')
         name = splitted[1]
@@ -102,7 +102,7 @@ class Logger:
         return name + ':' + line
 
     @staticmethod
-    def colorlevel(level):
+    def colorlevel(level: str) -> str:
         styles = {LevelDebug: Fore.BLUE, LevelInfo: Fore.GREEN, LevelNotice: Fore.GREEN + Style.BRIGHT,
                   LevelWarn: Fore.YELLOW, LevelError: Fore.LIGHTRED_EX, LevelCrit: Fore.RED,
                   LevelAlert: Fore.RED + Style.BRIGHT, LevelEmerg: Fore.RED + Style.BRIGHT}

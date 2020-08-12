@@ -1,3 +1,4 @@
+import random
 from logr import Logr
 from levels import LevelDebug, LevelInfo, LevelNotice, LevelWarn, LevelError, LevelCrit, LevelAlert, LevelEmerg
 
@@ -10,10 +11,12 @@ conf = Logr(
 
 def test():
     logger = conf.getlogger('hello.log')
-    for level in [LevelDebug, LevelInfo, LevelNotice, LevelWarn, LevelError, LevelCrit, LevelAlert, LevelEmerg, 'unknown']:
+    for level in [LevelDebug, LevelInfo, LevelNotice, LevelWarn, LevelError, LevelCrit, LevelAlert, LevelEmerg,
+                  'unknown']:
         logger.log(level, 'hello {}', 'python!', 123, [1, 2, 3], conf)
 
     counter = conf.getcounter('hello.log')
+    counter.inc('lol').avg(random.randint(0, 100))
 
 
 test()
