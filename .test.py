@@ -15,8 +15,9 @@ def test():
                   'unknown']:
         logger.log(level, 'hello {}', 'python!', 123, [1, 2, 3], conf)
 
-    counter = conf.getcounter('hello.log')
-    counter.inc('lol').avg(random.randint(0, 100))
+    logger.counter.watchsystem()
+    logger.counter.inc('lol').avg(random.randint(0, 100))
+    logger.info('Its Widget, Bro!', conf.getcounter('crypto.log').snippet('max', 'price:BTC_USDT', 30))
 
 
 test()

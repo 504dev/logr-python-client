@@ -19,6 +19,17 @@
 * `logger.info`
 * `logger.debug`
 
+### Available `counter` methods
+
+* `counter.inc`
+* `counter.avg`
+* `counter.max`
+* `counter.min`
+* `counter.per`
+* `counter.time`
+* `counter.snippet` bonus method!
+
+
 ### Example
 
 ```python

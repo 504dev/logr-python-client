@@ -1,4 +1,5 @@
 import threading
+import psutil
 import socket
 import json
 from logr import Logr
@@ -13,6 +14,7 @@ class Counter:
         self.conn = None
         self.tmp = {}
         self.timer = None
+        self.system = False
 
     def connect(self):
         if self.conn is None:
@@ -24,8 +26,19 @@ class Counter:
             self.timer.start()
 
     def flush(self):
-        for key in self.tmp:
-            value = self.tmp.get(key)
+        if self.system:
+            la = psutil.getloadavg()
+            cpu = psutil.cpu_percent(interval=None)
+            mem = psutil.virtual_memory()
+            disk = psutil.disk_usage('/')
+            self.per('la', la[0], 100)
+            self.per('cpu', cpu, 100)
+            self.per('mem', mem.percent, 100)
+            self.per('disk', disk.percent, 100)
+        tmp = self.tmp
+        self.tmp = {}
+        for key in tmp:
+            value = tmp.get(key)
             self.send(value)
 
     def stop(self):
@@ -71,3 +84,15 @@ class Counter:
 
     def time(self, key: str, duration: int):
         return self.touch(key).time(duration)
+
+    def snippet(self, kind: str, keyname: str, limit: int = 30):
+        return json.dumps({
+            'widget': 'counter',
+            'kind': kind,
+            'keyname': keyname,
+            'limit': limit,
+            **self.blank()
+        })
+
+    def watchsystem(self):
+        self.system = True

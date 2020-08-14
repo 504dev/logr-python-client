@@ -5,6 +5,7 @@ import socket
 import datetime
 import traceback
 from logr import Logr
+from counter import Counter
 from colorama import Fore, Style
 from levels import Weights, LevelDebug, LevelInfo, LevelNotice, LevelWarn, LevelError, LevelCrit, LevelAlert, LevelEmerg
 
@@ -18,6 +19,7 @@ class Logger:
         self.prefix = '{time} {level} '
         self.body = '[{version}, pid={pid}, {initiator}] {message}'
         self.level = level
+        self.counter = Counter(config, logname)
 
     def getprefix(self, level: str) -> str:
         res = self.prefix
