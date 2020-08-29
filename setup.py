@@ -1,12 +1,10 @@
 from setuptools import setup, find_packages
 from m2r import convert
 
-
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 long_description = convert(long_description)
-
 
 setup(
     name='logrpy',
