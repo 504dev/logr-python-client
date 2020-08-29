@@ -4,9 +4,9 @@ import json
 import socket
 import datetime
 import traceback
+from colorama import Fore, Style
 from logrpy import Logr
 from counter import Counter
-from colorama import Fore, Style
 from levels import Weights, LevelDebug, LevelInfo, LevelNotice, LevelWarn, LevelError, LevelCrit, LevelAlert, LevelEmerg
 
 

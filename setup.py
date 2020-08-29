@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='logrpy',
+    name='src',
     version='1.0.4',
     packages=find_packages(),
     install_requires=[
@@ -10,7 +10,7 @@ setup(
         'psutil',
     ],
     url='https://github.com/504dev/logr-python-client',
-    py_modules=['logrpy'],
+    py_modules=['src'],
     package_dir={'': 'src'},
     include_package_data=True,
     author='Kozhurkin Dima',
