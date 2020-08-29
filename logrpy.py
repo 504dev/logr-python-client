@@ -1,11 +1,12 @@
 import os
 import socket
-import aes
 import hashlib
 import base64
+from aes import AESCipher
+from utils import getcommit, gettag
 
-commit = os.popen('git rev-parse HEAD').read().strip()
-tag = os.popen('git tag -l --points-at HEAD').read().strip()
+commit = getcommit()
+tag = gettag()
 pid = os.getpid()
 
 
@@ -16,7 +17,7 @@ class Logr:
         self.udp = udp
         self.public_key = public_key
         self.private_hash = hashlib.sha256(key_bytes).digest()
-        self.cipher = aes.AESCipher(self.private_hash)
+        self.cipher = AESCipher(self.private_hash)
         self.hostname = hostname or socket.gethostname()
         self.version = version
         self.pid = pid

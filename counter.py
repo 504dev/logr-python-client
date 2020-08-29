@@ -2,7 +2,7 @@ import threading
 import psutil
 import socket
 import json
-from logr import Logr
+from logrpy import Logr
 from count import Count
 
 
@@ -29,11 +29,11 @@ class Counter:
         if self.system:
             la = psutil.getloadavg()
             cpu = psutil.cpu_percent(interval=None)
-            mem = psutil.virtual_memory()
+            ram = psutil.virtual_memory()
             disk = psutil.disk_usage('/')
             self.per('la', la[0], 100)
             self.per('cpu', cpu, 100)
-            self.per('mem', mem.percent, 100)
+            self.per('ram', ram.percent, 100)
             self.per('disk', disk.percent, 100)
         tmp = self.tmp
         self.tmp = {}

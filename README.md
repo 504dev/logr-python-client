@@ -6,7 +6,7 @@
 [Logr]: https://github.com/504dev/logr
 
 
-    pip install logr-python-client
+    pip install logrpy
 
 ### Available `logger` methods
 

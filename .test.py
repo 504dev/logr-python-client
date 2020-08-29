@@ -1,5 +1,5 @@
 import random
-from logr import Logr
+from logrpy import Logr
 from levels import LevelDebug, LevelInfo, LevelNotice, LevelWarn, LevelError, LevelCrit, LevelAlert, LevelEmerg
 
 conf = Logr(
