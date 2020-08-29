@@ -2,4 +2,4 @@
 *.pyc
 build
 dist
-logrpy.egg-info
+*.egg-info

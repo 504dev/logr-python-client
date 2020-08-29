@@ -1,6 +1,6 @@
 import random
 from logrpy import Logr
-from levels import LevelDebug, LevelInfo, LevelNotice, LevelWarn, LevelError, LevelCrit, LevelAlert, LevelEmerg
+from logrpy.levels import LevelDebug, LevelInfo, LevelNotice, LevelWarn, LevelError, LevelCrit, LevelAlert, LevelEmerg
 
 conf = Logr(
     ('127.0.0.1', 7776),

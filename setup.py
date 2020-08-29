@@ -1,8 +1,10 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='src',
-    version='1.0.4',
+    name='logrpy',
+    version='1.0.7',
+    author='Kozhurkin Dima',
+    author_email='kozhurkin.dima@gmail.com',
     packages=find_packages(),
     install_requires=[
         'pycryptodome',
@@ -10,9 +12,5 @@ setup(
         'psutil',
     ],
     url='https://github.com/504dev/logr-python-client',
-    py_modules=['src'],
-    package_dir={'': 'src'},
-    include_package_data=True,
-    author='Kozhurkin Dima',
-    author_email='kozhurkin.dima@gmail.com'
+    include_package_data=True
 )

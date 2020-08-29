@@ -2,8 +2,8 @@ import os
 import socket
 import hashlib
 import base64
-from aes import AESCipher
-from utils import getcommit, gettag
+from .aes import AESCipher
+from .utils import getcommit, gettag
 
 commit = getcommit()
 tag = gettag()
@@ -33,9 +33,9 @@ class Logr:
             return ''
 
     def getlogger(self, logname: str, **opts):
-        from logger import Logger
+        from .logger import Logger
         return Logger(self, logname, **opts)
 
     def getcounter(self, *args):
-        from counter import Counter
+        from .counter import Counter
         return Counter(self, *args)

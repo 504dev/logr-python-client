@@ -2,8 +2,8 @@ import threading
 import psutil
 import socket
 import json
-from logrpy import Logr
-from count import Count
+from .logr import Logr
+from .count import Count
 
 
 class Counter:
